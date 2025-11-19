@@ -1,118 +1,115 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class SOSOverlay extends StatefulWidget {
-  final VoidCallback onComplete;
-
-  const SOSOverlay({super.key, required this.onComplete});
+  const SOSOverlay({super.key});
 
   @override
   State<SOSOverlay> createState() => _SOSOverlayState();
 }
 
-class _SOSOverlayState extends State<SOSOverlay> with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  late final Animation<double> _scaleAnimation;
-  Timer? _countdownTimer;
-  int _remaining = 60;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    )..repeat(reverse: true);
-    _scaleAnimation = Tween<double>(begin: 0.9, end: 1.1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-    _startTimer();
-  }
-
-  void _startTimer() {
-    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (!mounted) {
-        timer.cancel();
-        return;
-      }
-      if (_remaining <= 1) {
-        timer.cancel();
-        setState(() => _remaining = 0);
-        widget.onComplete();
-        return;
-      }
-      setState(() => _remaining -= 1);
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _countdownTimer?.cancel();
-    super.dispose();
-  }
+class _SOSOverlayState extends State<SOSOverlay> {
+  bool _expanded = false;
 
   @override
   Widget build(BuildContext context) {
-    final overlayColor = Colors.indigo.shade900.withValues(alpha: 242);
-    final shadowColor = Colors.indigo.shade300.withValues(alpha: 153);
-    final scheme = Theme.of(context).colorScheme;
-    return PopScope(
-      canPop: false,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: Container(color: overlayColor),
-          ),
-          Center(
+    // If expanded, we want to cover the whole screen.
+    // Since we are going to place this widget directly in the Stack of HomePage,
+    // we can use Positioned.fill for the expanded state.
+    
+    if (_expanded) {
+      return Positioned.fill(
+        child: Container(
+          color: const Color(0xFF111827),
+          child: SafeArea(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ScaleTransition(
-                  scale: _scaleAnimation,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 400),
-                    width: 180,
-                    height: 180,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [
-                          scheme.secondary,
-                          scheme.primaryContainer,
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: shadowColor,
-                          blurRadius: 20,
-                          spreadRadius: 5,
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Text(
-                        '$_remaining s',
-                        style: const TextStyle(fontSize: 36, color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 64)
+                    .animate(onPlay: (c) => c.repeat())
+                    .shake(duration: 1.seconds),
+                const SizedBox(height: 24),
+                const Text(
+                  '深呼吸',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 24),
-                Text('深呼吸，专注当下', style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.white)),
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
                 const Text(
-                  '60秒倒计时完成之前无法退出，等待脑海冷静下来。',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                  '冲动是魔鬼，冷静 60 秒',
+                  style: TextStyle(color: Colors.white70, fontSize: 16),
                 ),
+                const SizedBox(height: 48),
+                TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 60, end: 0),
+                  duration: const Duration(seconds: 60),
+                  builder: (context, value, child) {
+                    return Text(
+                      '${value.toInt()}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 72,
+                        fontWeight: FontWeight.w200,
+                      ),
+                    );
+                  },
+                  onEnd: () {
+                    setState(() => _expanded = false);
+                  },
+                ),
+                const SizedBox(height: 48),
+                TextButton(
+                  onPressed: () => setState(() => _expanded = false),
+                  child: const Text('我已冷静', style: TextStyle(color: Colors.white54)),
+                )
               ],
             ),
           ),
-        ],
+        ).animate().fadeIn(),
+      );
+    }
+
+    // Collapsed state: Floating button
+    return Positioned(
+      top: MediaQuery.of(context).padding.top + 16,
+      right: 24,
+      child: GestureDetector(
+        onTap: () => setState(() => _expanded = true),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: const Color(0xFFEF4444),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFEF4444).withOpacity(0.4),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.sos, color: Colors.white, size: 20),
+              const SizedBox(width: 4),
+              const Text(
+                'SOS',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(
+          begin: const Offset(1, 1),
+          end: const Offset(1.05, 1.05),
+          duration: 1.seconds,
+        ),
       ),
     );
   }

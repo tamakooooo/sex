@@ -1,65 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sex/src/ui/home_page.dart';
 
-import 'src/providers/record_provider.dart';
-import 'src/ui/home_page.dart';
-
-const _appTitle = '戒🦌';
-
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await initializeDateFormatting('zh_CN', null);
-  final prefs = await SharedPreferences.getInstance();
-  runApp(
-    ProviderScope(
-      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
-      child: const SexApp(),
-    ),
-  );
+void main() {
+  initializeDateFormatting('zh_CN', null).then((_) {
+    runApp(const ProviderScope(child: MyApp()));
+  });
 }
 
-class SexApp extends StatelessWidget {
-  const SexApp({super.key});
-
-  static const _primary = Color(0xFFFE6297);
-  static const _secondary = Color(0xFFF960DB);
-  static const _accent = Color(0xFF981534);
-  static const _warn = Color(0xFF762A2A);
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = ColorScheme(
-      brightness: Brightness.light,
-      primary: _primary,
-      onPrimary: Colors.white,
-      secondary: _secondary,
-      onSecondary: Colors.white,
-      surface: Colors.white,
-      onSurface: Colors.black87,
-      error: _warn,
-      onError: Colors.white,
-      tertiary: _accent,
-      onTertiary: Colors.white,
-      primaryContainer: _primary,
-      onPrimaryContainer: Colors.white,
-      secondaryContainer: _secondary,
-      onSecondaryContainer: Colors.white,
-    );
-
     return MaterialApp(
-      title: _appTitle,
+      title: 'Sex',
       theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: colorScheme,
+        colorScheme: const ColorScheme.light(
+          primary: Color(0xFFFE6297),
+          secondary: Color(0xFFF960DB),
+          tertiary: Color(0xFF981534),
+          error: Color(0xFF762A2A),
+          surface: Colors.white,
+        ),
         scaffoldBackgroundColor: Colors.white,
+        useMaterial3: true,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: _primary,
             textStyle: const TextStyle(fontWeight: FontWeight.bold),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            padding: const EdgeInsets.symmetric(vertical: 16),
           ),
         ),
       ),
