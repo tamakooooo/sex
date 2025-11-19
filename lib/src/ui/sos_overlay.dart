@@ -13,10 +13,6 @@ class _SOSOverlayState extends State<SOSOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    // If expanded, we want to cover the whole screen.
-    // Since we are going to place this widget directly in the Stack of HomePage,
-    // we can use Positioned.fill for the expanded state.
-    
     if (_expanded) {
       return Positioned.fill(
         child: Container(
@@ -72,7 +68,6 @@ class _SOSOverlayState extends State<SOSOverlay> {
       );
     }
 
-    // Collapsed state: Floating button
     return Positioned(
       top: MediaQuery.of(context).padding.top + 16,
       right: 24,
