@@ -78,13 +78,13 @@ class _SOSOverlayState extends State<SOSOverlay> {
           decoration: BoxDecoration(
             color: const Color(0xFFEF4444),
             borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFFEF4444).withOpacity(0.4),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x66EF4444),
+                  blurRadius: 10,
+                  offset: Offset(0, 4),
+                ),
+              ],
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,

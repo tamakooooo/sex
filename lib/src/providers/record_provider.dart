@@ -16,6 +16,8 @@ final recordProvider = NotifierProvider<RecordNotifier, List<DateTime>>(
   () => RecordNotifier(),
 );
 
+final recordListProvider = recordProvider;
+
 class RecordNotifier extends Notifier<List<DateTime>> {
   @override
   List<DateTime> build() {

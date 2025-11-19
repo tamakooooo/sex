@@ -165,7 +165,7 @@ class RecordDashboardPage extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                    color: const Color(0x0D000000),
                               blurRadius: 20,
                               offset: const Offset(0, 4),
                             ),
@@ -186,7 +186,7 @@ class RecordDashboardPage extends ConsumerWidget {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF3B82F6).withOpacity(0.3),
+            color: const Color(0x4D3B82F6),
                       blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),

@@ -17,7 +17,7 @@ class StreakCard extends ConsumerWidget {
     
     DateTime? lastRelapse;
     if (records.isNotEmpty) {
-      lastRelapse = records.first.dateTime;
+      lastRelapse = records.first;
     }
 
     final now = DateTime.now();
@@ -42,11 +42,11 @@ class StreakCard extends ConsumerWidget {
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: const Color(0xFFFE6297).withOpacity(0.3),
+            color: Color(0x4DFE6297),
             blurRadius: 20,
-            offset: const Offset(0, 10),
+            offset: Offset(0, 10),
           ),
         ],
       ),
@@ -109,7 +109,7 @@ class StreakCard extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: const Color(0x33FFFFFF),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(

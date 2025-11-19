@@ -36,15 +36,15 @@ class _CalendarSectionState extends ConsumerState<CalendarSection> {
               });
             },
             eventLoader: (day) {
-              return records.where((r) => isSameDay(r.dateTime, day)).toList();
+              return records.where((r) => isSameDay(r, day)).toList();
             },
             calendarStyle: CalendarStyle(
               markerDecoration: const BoxDecoration(
                 color: Color(0xFFFE6297),
                 shape: BoxShape.circle,
               ),
-              todayDecoration: BoxDecoration(
-                color: const Color(0xFF3B82F6).withOpacity(0.5),
+              todayDecoration: const BoxDecoration(
+                color: Color(0x803B82F6),
                 shape: BoxShape.circle,
               ),
               selectedDecoration: const BoxDecoration(
@@ -103,11 +103,11 @@ class _CalendarSectionState extends ConsumerState<CalendarSection> {
                     ),
                   ),
                   const Spacer(),
-                  if (records.any((r) => isSameDay(r.dateTime, _selectedDay)))
+                  if (_selectedDay != null && records.any((r) => isSameDay(r, _selectedDay)))
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFE6297).withOpacity(0.1),
+                        color: const Color(0x1AFE6297),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Text(
@@ -123,7 +123,7 @@ class _CalendarSectionState extends ConsumerState<CalendarSection> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF10B981).withOpacity(0.1),
+                        color: const Color(0x1A10B981),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Text(
